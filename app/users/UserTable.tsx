@@ -1,12 +1,19 @@
 "use client";
 
 import { User } from "./types";
+import { useRouter } from "next/navigation";
 
 interface UserTableProps {
   data: User[];
 }
 
 export const UserTable: React.FC<UserTableProps> = ({ data }) => {
+  const router = useRouter();
+
+  const handleRowClick = (id: number) => {
+    router.push(`/users/${id}`);
+  };
+
   if (data.length === 0) {
     return (
       <div className="text-center text-gray-500">
@@ -35,7 +42,11 @@ export const UserTable: React.FC<UserTableProps> = ({ data }) => {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {data.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50 transition-colors">
+              <tr
+                key={user.id}
+                onClick={() => handleRowClick(user.id)}
+                className="hover:bg-gray-50 transition-colors cursor-pointer"
+              >
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">
                   {user.name}
                 </td>
@@ -54,6 +65,7 @@ export const UserTable: React.FC<UserTableProps> = ({ data }) => {
         {data.map((user) => (
           <div
             key={user.id}
+            onClick={() => handleRowClick(user.id)}
             className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 space-y-2"
           >
             <div>
