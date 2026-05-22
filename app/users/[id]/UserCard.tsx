@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { UserDetail } from "./types";
 
 interface UserCardProps {
@@ -8,6 +8,8 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ user }: UserCardProps) => {
+  const router = useRouter();
+
   return (
     <div className="w-full bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden">
       {/* Header Card */}
@@ -83,12 +85,12 @@ export const UserCard = ({ user }: UserCardProps) => {
 
       {/* Footer Card Navigation */}
       <div className="bg-gray-50 px-6 py-4 sm:px-8 border-t border-gray-100 flex justify-between items-center">
-        <Link
-          href="/users"
-          className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+        <button
+          onClick={() => router.back()}
+          className="inline-flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors focus:outline-none"
         >
-          ← Back to list
-        </Link>
+          ← Back to list (Preserve Filters)
+        </button>
       </div>
     </div>
   );

@@ -10,60 +10,80 @@ const UsersPage = () => {
     isLoading,
     searchQuery,
     setSearchQuery,
+    filterType,
+    setFilterType,
     sortOrder,
-    toggleSortOrder,
+    setSortOrder,
   } = useUsers();
 
   return (
     <div className="container mx-auto p-4 max-w-6xl min-h-screen">
       <h1 className="text-3xl font-bold mb-6 text-gray-800 tracking-tight">
-        Users List
+        Users Workspace
       </h1>
 
-      {/* Search & Sort */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6 items-center justify-between">
-        <div className="w-full sm:w-72">
+      {/* Kontrol Panel */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div>
+          <label className="text-xs font-bold text-gray-500 uppercase block mb-1">
+            Cari User
+          </label>
           <input
             type="text"
-            placeholder="Cari berdasarkan nama atau email..."
+            placeholder="Nama atau email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none text-sm transition-all"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
           />
         </div>
 
-        <div className="w-full sm:w-auto flex items-center gap-2 justify-end">
-          <span className="text-sm text-gray-600 font-medium">
-            Urutkan Nama:
-          </span>
-          <button
-            onClick={toggleSortOrder}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors shadow-sm focus:outline-none"
+        <div>
+          <label className="text-xs font-bold text-gray-500 uppercase block mb-1">
+            Filter Aktivitas
+          </label>
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
           >
-            {sortOrder === "asc" ? "Ascending (A-Z)" : "Descending (Z-A)"}
-          </button>
+            <option value="all">Semua User</option>
+            <option value="pending">Pending Tugas</option>
+            <option value="no_completed">Tugas Belum Selesai</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="text-xs font-bold text-gray-500 uppercase block mb-1">
+            Urutan Nama / Tugas
+          </label>
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+          >
+            <option value="asc">Nama (A-Z) ↑</option>
+            <option value="desc">Nama (Z-A) ↓</option>
+            <option value="most_pending">Pending Terbanyak</option>
+          </select>
         </div>
       </div>
 
-      {/* State Handling: Error */}
       {error && (
-        <div className="p-4 mb-6 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm font-medium">
-          Terjadi kesalahan: {error.message || "Gagal memuat data."}
+        <div className="p-4 mb-6 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+          Terjadi kesalahan memuat data operasi.
         </div>
       )}
 
-      {/* State Handling: Loading */}
-      {isLoading && (
+      {isLoading ? (
         <div className="w-full space-y-4 animate-pulse">
-          <div className="h-10 bg-gray-200 rounded w-full hidden md:block"></div>
+          <div className="h-12 bg-gray-200 rounded-xl"></div>
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-16 bg-gray-100 rounded w-full"></div>
+            <div key={i} className="h-16 bg-gray-100 rounded-lg"></div>
           ))}
         </div>
+      ) : (
+        <UserTable data={users} />
       )}
-
-      {/* Tampilan Data */}
-      {!isLoading && !error && <UserTable data={users} />}
     </div>
   );
 };
